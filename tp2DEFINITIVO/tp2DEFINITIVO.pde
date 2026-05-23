@@ -39,6 +39,7 @@ void draw(){
   text("Godfather", 0, 180);
   textFont(fuente2,50);
   text("INIZIO", 279, 446);
+  text("INIZIO", 279, 446);
   
   
   
