@@ -4,10 +4,11 @@ int posY;
 float tamText;
 int pantalla;
 int pantallaAnterior;
-boolean botonIActivado;
+int tiempoInicio;
 float contador;
 float opacidad;
 float posicionXBV, posicionYBV, tamXBV, tamYBV;
+float posicionXBR, posicionYBR, tamXBR, tamYBR;
 float posicionXB1, posicionYB1, tamXB1, tamYB1;
 float posicionXB2, posicionYB2, tamXB2, tamYB2;
 float posicionXB3, posicionYB3, tamXB3, tamYB3;
@@ -19,6 +20,7 @@ void setup(){
   pantallaAnterior = 1;
   contador = 0;
   opacidad = 0;
+  tiempoInicio = 0;
   
   imagen1 = loadImage("elpadrino.jpeg");
   imagen2 = loadImage("manitoroja-removebg-preview.png");
@@ -53,6 +55,11 @@ void setup(){
   posicionYBV = 440;
   tamXBV = 80;
   tamYBV = 30;
+  
+  posicionXBR = 20;
+  posicionYBR = 440;
+  tamXBR = 150;
+  tamYBR = 30;
 }
 
 void draw(){
@@ -61,6 +68,7 @@ void draw(){
     contador = 0;
     opacidad = 0;
     pantallaAnterior = pantalla;
+    tiempoInicio = frameCount;
   }
   
   if (contador < 50) {
@@ -68,18 +76,19 @@ void draw(){
     opacidad = map(contador, 0, 50, 0, 255);
   }
   
+  if (pantalla == 2 || pantalla == 3 || pantalla == 4) {
+    if (frameCount - tiempoInicio > 900) {
+      pantalla = pantalla + 1;
+    }
+  }
+  
   if (pantalla == 1) {
     background(14, 14, 14);
     image(imagen1, 175, 50, 293, 441);
     image(imagen2, 80, 30, 130, 130);
     
-    if (mouseX > posicionXB1 && mouseX < posicionXB1 + tamXB1 && mouseY > posicionYB1 && mouseY < posicionYB1 + tamYB1) {
-      fill(255, 0, 0, opacidad);
-    } else {
-      fill(90, 0, 0, opacidad);
-    }
     textFont(fuente2, 50);
-    text("INIZIO", 279, 446);
+    dibujarBoton(posicionXB1, posicionYB1, tamXB1, tamYB1, "INIZIO", 279, 446);
     
     fill(90, 0, 0, opacidad);
     textFont(fuente1, 90);
@@ -96,27 +105,9 @@ void draw(){
     text("Godfather", 0, 180);   
     
     textFont(fuente2, 50);
-    
-    if (mouseX > posicionXB2 && mouseX < posicionXB2 + tamXB2 && mouseY > posicionYB2 && mouseY < posicionYB2 + tamYB2) {
-      fill(255, 0, 0, opacidad);
-    } else {
-      fill(90, 0, 0, opacidad);
-    }
-    text("FAMIGLIA", posicionXB2, posicionYB2 + tamYB2);
-  
-    if (mouseX > posicionXB3 && mouseX < posicionXB3 + tamXB3 && mouseY > posicionYB3 && mouseY < posicionYB3 + tamYB3) {
-      fill(255, 0, 0, opacidad);
-    } else {
-      fill(90, 0, 0, opacidad);
-    }
-    text("VENDETTA", posicionXB3, posicionYB3 + tamYB3);
-  
-    if (mouseX > posicionXB4 && mouseX < posicionXB4 + tamXB4 && mouseY > posicionYB4 && mouseY < posicionYB4 + tamYB4){
-      fill(255, 0, 0, opacidad);
-    } else {
-      fill(90, 0, 0, opacidad);
-    }
-    text("EREDITÀ", posicionXB4, posicionYB4 + tamYB4);
+    dibujarBoton(posicionXB2, posicionYB2, tamXB2, tamYB2, "FAMIGLIA", posicionXB2, posicionYB2 + tamYB2);
+    dibujarBoton(posicionXB3, posicionYB3, tamXB3, tamYB3, "VENDETTA", posicionXB3, posicionYB3 + tamYB3);
+    dibujarBoton(posicionXB4, posicionYB4, tamXB4, tamYB4, "EREDITÀ", posicionXB4, posicionYB4 + tamYB4);
   }
   
   if (pantalla == 3 || pantalla == 4 || pantalla == 5) {
@@ -149,13 +140,23 @@ void draw(){
 
   if (pantalla != 1) {
     textFont(fuente2, 25);
-    if (mouseX > posicionXBV && mouseX < posicionXBV + tamXBV && mouseY > posicionYBV && mouseY < posicionYBV + tamYBV) {
-      fill(255, 0, 0, opacidad);
-    } else {
-      fill(90, 0, 0, opacidad);
-    }
-    text("VOLVER", posicionXBV, posicionYBV + tamYBV);
+    dibujarBoton(posicionXBV, posicionYBV, tamXBV, tamYBV, "VOLVER", posicionXBV, posicionYBV + tamYBV);
   }
+  
+  if (pantalla == 3 || pantalla == 4 || pantalla == 5) {
+    textFont(fuente2, 25);
+    dibujarBoton(posicionXBR, posicionYBR, tamXBR, tamYBR, "REINICIAR", posicionXBR, posicionYBR + tamYBR);
+  }
+}
+
+
+void dibujarBoton(float px, float py, float tx, float ty, String texto, float textoX, float textoY){
+  if (mouseX > px && mouseX < px + tx && mouseY > py && mouseY < py + ty) {
+    fill(255, 0, 0, opacidad);
+  } else {
+    fill(90, 0, 0, opacidad);
+  }
+  text(texto, textoX, textoY);
 }
 
 
@@ -182,4 +183,13 @@ void mousePressed(){
     }
   }
   println(mouseX, mouseY);
+}
+
+
+void mouseClicked(){
+  if (pantalla == 3 || pantalla == 4 || pantalla == 5) {
+    if (mouseX > posicionXBR && mouseX < posicionXBR + tamXBR && mouseY > posicionYBR && mouseY < posicionYBR + tamYBR) {
+      pantalla = 1;
+    }
+  }
 }
