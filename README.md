@@ -1,2 +1,2 @@
 # ipmi
-TP#1 — Dibujo básico
+TP#3 — trabajo practico numero 3
